@@ -3,6 +3,7 @@
 import uuid
 
 from mesos_cook import *
+from mesos_cook.model import *
 from requests import HTTPError
 
 job_spec = Job(
