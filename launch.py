@@ -24,7 +24,7 @@ job_spec = Job(
             )
         ]
     ),
-    command='./task.py {{id}}'
+    command='./task.py {{id}}',
     cpus=1,
     gpus=1,
     mem=256
