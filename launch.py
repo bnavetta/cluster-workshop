@@ -11,7 +11,7 @@ job_spec = Job(
     uuid='{{job_uuid}}',
     priority=75,
     max_retries=2,
-    max_runtime=3600000,
+    max_runtime=60*60*1000, # Max runtime is in milliseconds
     container=Container(
         type='MESOS',
         docker=DockerInfo(
@@ -31,16 +31,20 @@ job_spec = Job(
     mem=256
 )
 
-jobs = []
+def launch():
+    jobs = []
 
-for i in range(10):
-    job_uuid = uuid.uuid1()
-    print("Using job {} for task {}".format(job_uuid, i))
-    jobs.append(job_spec.bind(dict(id = i, job_uuid = job_uuid)))
+    for i in range(10):
+        job_uuid = uuid.uuid1()
+        print("Using job {} for task {}".format(job_uuid, i))
+        jobs.append(job_spec.bind(dict(id = i, job_uuid = str(job_uuid))))
 
-client = CookClient('http://serrep1.services.brown.edu:12321', 'ben', 'x')
+    client = CookClient('http://serrep1.services.brown.edu:12321', 'ben', 'x')
 
-try:
-    client.launch(jobs)
-except HTTPError as e:
-    print("{} error: {}".format(e.response.status_code, e.response.text))
+    try:
+        client.launch(jobs)
+    except HTTPError as e:
+        print("{} error: {}".format(e.response.status_code, e.response.text))
+
+if __name__ == '__main__':
+    launch()
